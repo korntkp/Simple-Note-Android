@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.korshreddern.a99newprojectbasicact.MainActivity">
+    <item
+        android:id="@+id/setting_delete_all"
+        android:orderInCategory="100"
+        android:title="@string/setting_delete_all"
+        app:showAsAction="never" />
+</menu>

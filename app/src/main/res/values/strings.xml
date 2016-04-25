@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">04 Simple Note</string>
+    <string name="setting_delete_1">Delete 1</string>
+    <string name="setting_delete_all">Delete All</string>
+    <string name="setting_refresh">Refresh</string>
+    <string name="note">Note</string>
+    <string name="note_save">Save</string>
+</resources>
