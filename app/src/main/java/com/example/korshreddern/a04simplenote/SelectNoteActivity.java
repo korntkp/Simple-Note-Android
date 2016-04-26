@@ -10,14 +10,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class SelectNoteActivity extends AppCompatActivity {
 
-    private ArrayList<Note> noteArrayList;
-    private ListView listView;
+    ArrayList<Note> noteArrayList;
+    ListViewAdapter adapter;
+    ListView listView;
     DBHelper db;
 
     @Override
@@ -46,14 +46,17 @@ public class SelectNoteActivity extends AppCompatActivity {
         refreshNote();
         this.listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                Toast.makeText(getApplicationContext(), "Edit", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), EditNoteActivity.class);
+                intent.putExtra("idNote", adapter.noteArrayList.get(arg2).id);
+                intent.putExtra("msgNote", adapter.noteArrayList.get(arg2).message);
+                startActivity(intent);
             }
         });
     }
 
     private void refreshNote() {
         noteArrayList = Note.searchNote(getApplicationContext());
-        ListViewAdapter adapter = new ListViewAdapter(getApplicationContext(), noteArrayList);
+        adapter = new ListViewAdapter(getApplicationContext(), noteArrayList);
         this.listView.setAdapter(adapter);
     }
 

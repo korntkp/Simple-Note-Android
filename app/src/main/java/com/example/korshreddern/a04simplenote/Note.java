@@ -48,6 +48,23 @@ public class Note {
         db.close();
     }
 
+    /*
+    * UPDATE table_name
+    * SET column1 = value1, column2 = value2...., columnN = valueN
+    * WHERE [condition];
+    * */
+    public void editNote(Context context, int id, String mDate, String msg){
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String sql="UPDATE notes SET date=?, message=? WHERE id=?;";
+        db.execSQL(sql, new String []{
+                mDate,
+                msg,
+                id+""
+        });
+        db.close();
+    }
+
     public void deleteNote(Context context, int id) {
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
