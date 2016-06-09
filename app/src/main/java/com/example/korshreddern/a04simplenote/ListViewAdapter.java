@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -49,6 +50,9 @@ public class ListViewAdapter extends BaseAdapter {
         textView_message.setText(noteArrayList.get(position).message);
         TextView textView_date = (TextView)convertView.findViewById(R.id.row_date);
         textView_date.setText(noteArrayList.get(position).date);
+
+        textView_message.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.row_anim));
+        textView_date.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.row_anim));
 
         return convertView;
     }
