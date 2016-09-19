@@ -1,18 +1,43 @@
-package com.example.korshreddern.a04simplenote;
+package com.example.korshreddern.a04simplenote.database;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import com.example.korshreddern.a04simplenote.model.Note;
 
 import java.util.ArrayList;
 
 /**
  * Created by Korshreddern on 22-Apr-16.
  */
-public class Note {
-    public int id;
-    public String date;
-    public String message;
+public class DBHelper extends SQLiteOpenHelper {
+    public static final String DB_NAME = "NoteDB.sqlite";
+    public static final int DB_VER = 1;
+
+    public DBHelper(Context context) {
+        super(context, DB_NAME, null, DB_VER);
+    }
+
+    /**
+     * TABLE notes
+     *  id      int (PRIMARY KEY) (AUTOINCREASE)
+     *  date    text
+     *  message text
+     * */
+    @Override
+    public void onCreate(SQLiteDatabase database) {
+        String sql;
+        sql = "CREATE TABLE notes (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, message TEXT);";
+        database.execSQL(sql);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase database, int oldver, int newver) {
+        database.execSQL("DROP TABLE IF EXISTS notes");
+        onCreate(database);
+    }
 
     public static ArrayList<Note> searchNote(Context context){
         ArrayList<Note> list = new ArrayList<Note>();
@@ -37,7 +62,7 @@ public class Note {
         return list;
     }
 
-    public void addNote(Context context, String mDate, String msg) {
+    public static void addNote(Context context, String mDate, String msg) {
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String sql="INSERT INTO notes (date,message) VALUES(?,?)";
@@ -53,7 +78,7 @@ public class Note {
     * SET column1 = value1, column2 = value2...., columnN = valueN
     * WHERE [condition];
     * */
-    public void editNote(Context context, int id, String mDate, String msg){
+    public static void editNote(Context context, int id, String mDate, String msg){
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String sql="UPDATE notes SET date=?, message=? WHERE id=?;";
@@ -65,7 +90,7 @@ public class Note {
         db.close();
     }
 
-    public void deleteNote(Context context, int id) {
+    public static void deleteNote(Context context, int id) {
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String sql = "DELETE FROM notes Where id=?";
@@ -74,7 +99,7 @@ public class Note {
         });
     }
 
-    public void deleteNoteAll(Context context) {
+    public static void deleteNoteAll(Context context) {
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete("notes", null, null);

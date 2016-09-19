@@ -1,10 +1,13 @@
-package com.example.korshreddern.a04simplenote;
+package com.example.korshreddern.a04simplenote.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.example.korshreddern.a04simplenote.database.DBHelper;
+import com.example.korshreddern.a04simplenote.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -14,6 +17,7 @@ public class EditNoteActivity extends AppCompatActivity {
 
     EditText editText;
     Button editSaveButton;
+
     String noteStr;
     int idNote;
     String msgNote;
@@ -23,13 +27,18 @@ public class EditNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
 
+        editText = (EditText) findViewById(R.id.edit_note_edittext);
+        editSaveButton = (Button) findViewById(R.id.edit_note_button);
+
+        dataFromBundle();
+
+        editText.setText(msgNote);
+    }
+
+    private void dataFromBundle() {
         Bundle bundle = getIntent().getExtras();
         idNote = bundle.getInt("idNote");
         msgNote = bundle.getString("msgNote");
-
-        editText = (EditText) findViewById(R.id.edit_note_edittext);
-        editText.setText(msgNote);
-        editSaveButton = (Button) findViewById(R.id.edit_note_button);
     }
 
     public void saveEditNote(View view) {
@@ -39,8 +48,7 @@ public class EditNoteActivity extends AppCompatActivity {
         Date date = new Date();
         String mDate = (dateFormat.format(date));
 
-        Note note = new Note();
-        note.editNote(getApplicationContext(), idNote , mDate, noteStr);
+        DBHelper.editNote(getApplicationContext(), idNote , mDate, noteStr);
         finish();
     }
 }

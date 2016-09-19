@@ -1,4 +1,4 @@
-package com.example.korshreddern.a04simplenote;
+package com.example.korshreddern.a04simplenote.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,32 +11,34 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.korshreddern.a04simplenote.database.DBHelper;
+import com.example.korshreddern.a04simplenote.adapter.ListViewAdapter;
+import com.example.korshreddern.a04simplenote.model.Note;
+import com.example.korshreddern.a04simplenote.R;
+
 import java.util.ArrayList;
 
-public class SelectNoteActivity extends AppCompatActivity {
+public class SelectNoteMainActivity extends AppCompatActivity {
 
     ArrayList<Note> noteArrayList;
     ListViewAdapter adapter;
     ListView listView;
     DBHelper db;
 
+    Toolbar toolbar;
+    FloatingActionButton fab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_note);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        listView = (ListView) findViewById(R.id.listView);
+
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            Intent intent = new Intent(getApplicationContext(), NoteActivity.class);
-            startActivity(intent);
-            }
-        });
-
-        this.listView = (ListView) findViewById(R.id.listView);
+        setupFabButton();
         db = new DBHelper(getApplicationContext());
     }
 
@@ -54,34 +56,40 @@ public class SelectNoteActivity extends AppCompatActivity {
         });
     }
 
+    private void setupFabButton() {
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AddNoteActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
     private void refreshNote() {
-        noteArrayList = Note.searchNote(getApplicationContext());
+        noteArrayList = DBHelper.searchNote(getApplicationContext());
         adapter = new ListViewAdapter(getApplicationContext(), noteArrayList);
-        this.listView.setAdapter(adapter);
+        listView.setAdapter(adapter);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.setting_delete_all) {
-            Note note = new Note();
-            note.deleteNoteAll(getApplicationContext());
-            refreshNote();
-            return true;
+            deleteAllNote();
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean deleteAllNote() {
+        DBHelper.deleteNoteAll(getApplicationContext());
+        refreshNote();
+        return true;
     }
 }
